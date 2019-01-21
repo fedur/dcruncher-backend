@@ -1,0 +1,49 @@
+/*
+router.route('/games')
+	.post(function(req, res) {
+        var game = new Game();     
+        game.name = req.body.name;  
+        game.save(function(err) {
+            if (err)
+                res.send(err);
+
+            res.json({ message: 'Game created!' });
+        });
+    })
+    .get(function(req, res) {
+        Game.find(function(err, games) {
+            if (err)
+                res.send(err);
+
+            res.json(games);
+    	});
+	});
+
+router.route('/games/:gameID')
+	.get(function(req,res) {
+		Game.find({name: req.params.gameID}, function(err,games){
+			if (err)
+				res.send(err);
+
+			res.json(games);
+		});
+	})
+
+	.put(function(req,res) {
+		Game.find({name: req.params.gameID}, function(err,games){
+			if (err)
+				res.send(err);
+
+			var game = games[0];
+			console.log(game);
+			game.set('test',req.body.random);
+			console.log(game);
+			game.save(function(err) {
+	            if (err)
+	                res.send(err);
+
+	            res.json(JSON.stringify(game));
+        	}); 
+		});
+	});
+*/
