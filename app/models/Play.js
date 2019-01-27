@@ -40,4 +40,7 @@ var PlaySchema   = new Schema(
 	}
 );
 
+// Ensure Drives & Plays Uniqueness
+PlaySchema.index({game_id: 1, drive_nb: 1, play_nb: 1}, {unique:true});
+
 module.exports = mongoose.model('Play', PlaySchema);

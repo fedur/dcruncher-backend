@@ -13,19 +13,22 @@ var mongoose   = require('mongoose');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 const url = 'mongodb://datacruncher:bobthelifter001@ds159204.mlab.com:59204/games';
-mongoose.connect(url);
+
+// Consider setting useCreateIndex to False for production...
+mongoose.connect(url, {useNewUrlParser: true});
+//mongoose.set('useCreateIndex', true);
 
 // ROUTES FOR OUR API
 // =============================================================================
 var gamesRouter = require('./routes/gamesRouter');
 var indexRouter = require('./routes/indexRouter');
 
+// Valid Routes
+app.use('/api/games', gamesRouter);
+
 // Error Routes
 app.use('/', indexRouter);
 app.use('/api/', indexRouter);
-
-// Valid Routes
-app.use('/api/games', gamesRouter);
 
 // START THE SERVER
 // =============================================================================
