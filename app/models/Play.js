@@ -5,6 +5,10 @@ var config = require('../config/APP_CONFIG');
 var PlaySchema   = new Schema(
 	{
 		// Drive & Play number, yardage at the beginning of play
+		game_id: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Game'
+		},
 		drive_nb: Number,
 		play_nb: Number,
 		at_yard: Number,
@@ -16,8 +20,7 @@ var PlaySchema   = new Schema(
 			max: config.NUMBER_OF_DOWNS
 		},
 
-		// Distance to next first down
-		distance: {
+		distance_to_first: {
 			type: Number,
 			min: 1
 		},
@@ -26,6 +29,8 @@ var PlaySchema   = new Schema(
 			type: String,
 			enum: ['pass', 'run']
 		},
+
+		yard_completion: Number,
 		general: Map,
 		defense: Map,
 		offense: Map
