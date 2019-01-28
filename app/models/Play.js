@@ -7,10 +7,14 @@ var PlaySchema   = new Schema(
 		// Drive & Play number, yardage at the beginning of play
 		game_id: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: 'Game'
+			ref: 'Game',
+			required: true
+		},
+		play_nb: {
+			type: Number,
+			required: true
 		},
 		drive_nb: Number,
-		play_nb: Number,
 		at_yard: Number,
 
 		// Down & Distance
@@ -41,6 +45,6 @@ var PlaySchema   = new Schema(
 );
 
 // Ensure Drives & Plays Uniqueness
-PlaySchema.index({game_id: 1, drive_nb: 1, play_nb: 1}, {unique:true});
+PlaySchema.index({game_id: 1, play_nb: 1}, {unique:true});
 
 module.exports = mongoose.model('Play', PlaySchema);
