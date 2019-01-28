@@ -11,14 +11,16 @@ exports.getGames = function(req,res){
 }
 // Get game corresponding to a certain Date.
 exports.getSingleGame = function(req,res){
-	var home = req.params.team2;
-	var away = req.params.team1;
-	var date = req.params.date;
-	Game.find({
+	var home = req.params.team1;
+	var away = req.params.team2;
+	var date = new Date(req.params.date);
+	console.log(date);
+	var promise = Game.find({
 		home: home,
 		away: away,
-		date: date 
-	})
+		date: date
+	});
+	promise.exec()
 		.then(game => res.json(game))
 		.catch(error => res.send(error));
 }
@@ -61,4 +63,21 @@ exports.createNewGame = function(req,res){
 	game.save()
 		.then(game => res.json(game))
 		.catch(error => res.send(error));
+}
+
+exports.modifyGame = function(req,res){
+	var home = req.params.team1;
+	var away = req.params.team2;
+	var date = req.params.date;
+	Game.findOneAndUpdate(
+		{ home: home, away: away, date: date},
+		{$set: req.body},
+		{new: true},
+		function(err,person) {
+			if (err)
+				res.send(error);
+			else 
+				res.json(person);
+		}
+	);
 }
