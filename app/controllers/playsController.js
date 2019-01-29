@@ -12,16 +12,23 @@ exports.getPlays = function(req,res) {
 		date: date
 	}).exec()
 		.then(game => fetchPlays(game,req.query))
-		.catch(error => res.send(error));
+		.catch(error => {
+			console.log(error);
+			res.send({error: error})
+		});
 
 	var fetchPlays = function(game, query) {
+		if (game == null) {
+			return res.send({error: "No game was found matching this criteria." })
+		}
+
 		Play.find().and(
 		[
 			{game_id: game['_id']}, 
 			query
-		])
+		]).exec()
 			.then(games => { res.json(games)})
-			.catch(error => { res.send(error)});
+			.catch(error => {res.send(error)});
 	}
 }
 
@@ -35,16 +42,18 @@ exports.addPlays = function(req,res) {
 		away: away,
 		date: date
 	}).exec()
-		.then(game => savePlay(game['_id'],req))
+		.then(game => savePlay(game,req))
 		.catch(error => res.send(error));
 
-	var savePlay = function(gameId,req){
+	var savePlay = function(game,req){
+		if (game == null) {
+			return res.send({error: "No game was found matching this criteria." })
+		}
 		var play = new Play(req.body);
-		play.set('game_id', gameId);
-		play.save()
+		play.set('game_id', game['_id']);
+		play.save().exec()
 			.then(play => res.json(play))
 			.catch(err => res.send(err));
 	}
-
 
 }

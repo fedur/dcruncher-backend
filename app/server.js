@@ -15,7 +15,9 @@ app.use(bodyParser.json());
 const url = 'mongodb://datacruncher:bobthelifter001@ds159204.mlab.com:59204/games';
 
 // Consider setting useCreateIndex to False for production...
-mongoose.connect(url, {useNewUrlParser: true});
+mongoose.connect(url, {useNewUrlParser: true})
+	.then(res => console.log("Connected successfully to DB"))
+	.catch(err => console.log(err));
 //mongoose.set('useCreateIndex', true);
 
 // ROUTES FOR OUR API
