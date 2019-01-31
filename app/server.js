@@ -8,7 +8,7 @@ var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
-var ErrorHandler = require('./util/ErrorHandling');
+var ErrorHandler = require('./util/ErrorMiddleWare');
 
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
