@@ -8,6 +8,7 @@ var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
+var ErrorHandler = require('./util/ErrorHandling');
 
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -18,7 +19,7 @@ const url = 'mongodb://datacruncher:bobthelifter001@ds159204.mlab.com:59204/game
 mongoose.connect(url, {useNewUrlParser: true})
 	.then(res => console.log("Connected successfully to DB"))
 	.catch(err => console.log(err));
-//mongoose.set('useCreateIndex', true);
+
 
 // ROUTES FOR OUR API
 // =============================================================================
@@ -33,6 +34,14 @@ app.use('/api/plays', playsRouter);
 // Error Routes
 app.use('/', indexRouter);
 app.use('/api/', indexRouter);
+
+
+// Default Middleware Error Handling Function
+// HandleDefaultError always has to be last
+app.use(ErrorHandler.handleMongoError);
+app.use(ErrorHandler.handleDefaultError);
+
+
 
 // START THE SERVER
 // =============================================================================

@@ -1,32 +1,30 @@
 var Game = require('../models/Game');
+const { MongoError } = require('mongodb');
 
 // Directly takes query elements as fields for search in the database.
-exports.getGames = function(req,res){
+exports.getGames = function(req,res, next){
 	Game.find(req.query, function(err,games) {
 		if (err)
-			res.send(err);
-
+			next(err);
 		res.json(games);
-	});
+	})
 }
 // Get game corresponding to a certain Date.
-exports.getSingleGame = function(req,res){
+exports.getSingleGame = function(req,res, next){
 	var home = req.params.team1;
 	var away = req.params.team2;
 	var date = new Date(req.params.date);
-	console.log(date);
-	var promise = Game.find({
+	Game.find({
 		home: home,
 		away: away,
 		date: date
-	});
-	promise.exec()
+	})
 		.then(game => res.json(game))
-		.catch(error => res.send(error));
+		.catch(error => next(error));
 }
 
 // Get all games between two teams
-exports.getMatchups = function(req,res){
+var getMatchups = function(req,res, next){
 	var team2 = req.params.team2;
 	var team1 = req.params.team1;
 	console.log(team1);
@@ -37,10 +35,10 @@ exports.getMatchups = function(req,res){
 			{home: team2, away: team1}
 		])
 		.then(games => { res.json(games)})
-		.catch(error => { res.send(error)});
+		.catch(error => { next(error);
 }
 
-exports.getTeamGames = function(req,res){
+var getTeamGames = function(req,res){
 	var team = req.params.team;
 	Game.find().or(
 		[
@@ -48,11 +46,11 @@ exports.getTeamGames = function(req,res){
 			{away: team}
 		])
 		.then(games => { res.json(games)})
-		.catch(error => { res.send(error)});
+		.catch(error => { next(error)});
 }
 
 
-exports.createNewGame = function(req,res){
+exports.createNewGame = function(req,res, next){
 	var home = req.params.team1;
 	var away = req.params.team2;
 	var date = req.params.date;
@@ -62,7 +60,7 @@ exports.createNewGame = function(req,res){
 	game.set('date', date);
 	game.save()
 		.then(game => res.json(game))
-		.catch(error => res.send(error));
+		.catch(error => next(error));
 }
 
 exports.modifyGame = function(req,res){

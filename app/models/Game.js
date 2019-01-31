@@ -1,8 +1,9 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var PlaySchema = require('./Play').schema;
+var ErrorLib = require('./ModelErrorHandling');
 
-var GameSchema   = new Schema(
+var schema   = new Schema(
 	{
 		type: mongoose.Schema.Types.ObjectId,
 	    home: String,
@@ -22,15 +23,16 @@ var GameSchema   = new Schema(
 		_id: true
 	}
 );
+// Indexes
+schema.index({home: 1, away: 1, date: 1}, {unique: true});
 
-GameSchema.index({home: 1, away: 1, date: 1}, {unique: true});
+// ErrorHandling
+//schema.post('save', ErrorLib.handleMongoErrors);
+schema.post('update', ErrorLib.handleMongoErrors);
+schema.post('findOneAndUpdate', ErrorLib.handleMongoErrors);
+schema.post('insertMany', ErrorLib.handleMongoErrors);
 
-// Set ID 
-/*GameSchema.pre('save', function(next) {
-	this._id = this.home + config.ID_SEPARATOR + 
-		this.away + config.ID_SEPARATOR + 
-		this.date.toISOString();
-	next();
-}); */
+//Error Handling
 
-module.exports = mongoose.model('Game', GameSchema);
+
+module.exports = mongoose.model('Game', schema);
