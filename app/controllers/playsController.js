@@ -1,59 +1,69 @@
 var Game = require('../models/Game');
 var Play = require('../models/Play');
 
-exports.getPlays = function(req,res) {
-	var home = req.params.team1;
-	var away = req.params.team2;
-	var date = new Date(req.params.date);
-	var gameID = "";
-	Game.findOne({
-		home: home,
-		away: away,
-		date: date
-	}).exec()
-		.then(game => fetchPlays(game,req.query))
-		.catch(error => {
-			console.log(error);
-			res.send({error: error})
-		});
+exports.addPlaysToGame = function(req,res, next) {
+	var play = new Play(req.body);
+	play.game_id = req.gameId;
 
-	var fetchPlays = function(game, query) {
-		if (game == null) {
-			return res.send({error: "No game was found matching this criteria." })
-		}
-
-		Play.find().and(
-		[
-			{game_id: game['_id']}, 
-			query
-		]).exec()
-			.then(games => { res.json(games)})
-			.catch(error => {res.send(error)});
-	}
+	Play.findOneAndUpdate(
+		{
+			game_id: req.gameId,
+			play_nb: req.body.play_nb
+		}, 
+		req.body,
+		{
+			upsert: true,
+			new: true
+		})
+		.then(game=>res.json(game))
+		.catch(error=> next(error));
 }
 
-exports.addPlays = function(req,res) {
-	var home = req.params.team1;
-	var away = req.params.team2;
-	var date = new Date(req.params.date);
+exports.getPlaysByGame = function(req,res, next) {
+	Play.find().and(
+		[
+			{game_id: req.gameId}, 
+			req.query
+		]).exec()
+			.then(games => { res.json(games)})
+			.catch(error => { next(error)});
+}
 
-	Game.findOne({
-		home: home,
-		away: away,
-		date: date
-	}).exec()
-		.then(game => savePlay(game,req))
-		.catch(error => res.send(error));
+exports.getPlayByPlayNumber = function(req,res,next) {
+	Play.findOne(
+		{
+			game_id: req.gameId,
+			play_nb: req.params.playNb
+		})
+			.then(game => res.json(game))
+			.catch(error => next(error));
+}
 
-	var savePlay = function(game,req){
-		if (game == null) {
-			return res.send({error: "No game was found matching this criteria." })
-		}
-		var play = new Play(req.body);
-		play.set('game_id', game['_id']);
-		play.save().exec()
-			.then(play => res.json(play))
-			.catch(err => res.send(err));
-	}
+exports.getPlays = function(req,res,next) {
+	Play.find(req.query, function(err,games) {
+		if (err)
+			return next(err);
+		res.json(games);
+	})
+}
 
+exports.addPlays = function(req,res,next) {
+	Play.findOneAndUpdate(
+		{
+			game_id: req.body.game_id,
+			play_nb: req.body.play_nb
+		}, 
+		req.body,
+		{
+			upsert: true,
+			new: true
+		})
+		.then(game=>res.json(game))
+		.catch(error=> next(error));
+}
+
+exports.getPlayById = function(req,res,next) {
+	Play.find({_id: req.params.playId})
+		.then(game => res.json(game))
+		.catch(error=> next(error));
 }

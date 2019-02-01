@@ -25,15 +25,10 @@ mongoose.connect(url, {useNewUrlParser: true})
 // =============================================================================
 var gamesRouter = require('./routes/gamesRouter');
 var playsRouter = require('./routes/playsRouter');
-var indexRouter = require('./routes/indexRouter');
 
 // Valid Routes
 app.use('/api/games', gamesRouter);
 app.use('/api/plays', playsRouter);
-
-// Error Routes
-app.use('/', indexRouter);
-app.use('/api/', indexRouter);
 
 
 // Default Middleware Error Handling Function

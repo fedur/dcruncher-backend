@@ -3,7 +3,7 @@ var Game = require('../models/Game');
 
 // ************ IMPORTANT  ************
 // SEE gamesRouter for first MiddleWare
-// req.teamId contains the game ID in all :id routes
+// req.gameId contains the game ID in all :id routes
 // *****************************************
 
 exports.getGames = function(req,res, next){
@@ -15,16 +15,16 @@ exports.getGames = function(req,res, next){
 }
 
 exports.getSingleGame = function(req,res,next){
-	Game.findById(req.teamId)
+	Game.findById(req.gameId)
 		.then(game=> res.json(game))
 		.catch(error => {
-			next(new Error('No game was found matching id ' + req.teamId));
+			next(new Error('No game was found matching id ' + req.gameId));
 		});
 }
 
 exports.updateGame = function(req,res,next){
 	Game.findOneAndUpdate(
-		{_id: req.teamId}, 
+		{_id: req.gameId}, 
 		req.body,
 		{
 			upsert: false,
