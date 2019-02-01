@@ -14,6 +14,7 @@ exports.handleMongoError = function(error, req, res, next) {
 }
 
 exports.handleDefaultError = function(error, req, res, next) {
+	console.log(error);
 	return res.status(500).json(
 		getErrorMsg(error.name, error.message));
 }

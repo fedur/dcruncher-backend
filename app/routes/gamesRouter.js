@@ -30,6 +30,8 @@ router.param('gameid', function(req,res,next,id){
 });
 
 router.get('/', controller.getGames);
+router.post('/', controller.createGame);
 router.get('/:gameid', controller.getSingleGame);
+router.post('/:gameid', controller.updateGame);
 
 module.exports = router;

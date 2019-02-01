@@ -22,17 +22,21 @@ exports.getSingleGame = function(req,res,next){
 		});
 }
 
-exports.createGame = function(req,res,next){
-	var id = req.params.teamid;
+exports.updateGame = function(req,res,next){
 	Game.findOneAndUpdate(
-		{ home: home, away: away, date: date},
-		{$set: req.body},
-		{new: true},
-		function(err,person) {
-			if (err)
-				res.send(error);
-			else 
-				res.json(person);
-		}
-	);
+		{_id: req.teamId}, 
+		req.body,
+		{
+			upsert: false,
+			new: true
+		})
+		.then(game=>res.json(game))
+		.catch(error=> next(error));
+}
+
+exports.createGame = function(req,res,next){
+	var game = new Game(req.body);
+	game.save()
+		.then(game => res.json(game))
+		.catch(error => next(error));
 }

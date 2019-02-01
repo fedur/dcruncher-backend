@@ -8,13 +8,18 @@ var schema   = new Schema(
 	    home: String,
 	    away: String,
 	    date: Date,
+	    is_a_practice: {
+	    	type: Boolean,
+	    	default: false
+	    },
 	    created_on: {
 	    	type: Date,
 	    	default: Date.now()
 	    },
-	    isAPractice: {
-	    	type: Boolean,
-	    	default: false
+
+	    last_modified: {
+	    	type: Date,
+	    	default: Date.now()
 	    }
 	}, 
 	{
@@ -22,6 +27,12 @@ var schema   = new Schema(
 		_id: true
 	}
 );
+
+schema.pre('save', function(next){
+	this.last_modified = Date.now();
+	return next();
+});
+
 // Indexes
 schema.index({home: 1, away: 1, date: 1}, {unique: true});
 module.exports = mongoose.model('Game', schema);
