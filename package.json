@@ -5,6 +5,10 @@
         "body-parser": "latest",
         "express": "latest",
         "mongodb": "^3.1.11",
-        "mongoose": "latest"
+        "mongoose": "latest",
+        "nodemon": "^1.18.9"
+    },
+    "scripts": {
+    	"start": "./node_modules/nodemon/bin/nodemon.js app/server.js"
     }
 }
