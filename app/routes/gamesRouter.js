@@ -2,7 +2,6 @@ var express = require('express');
 var Game = require('../models/Game');
 var router = express.Router();
 var controller = require('../controllers/gamesController');
-var playsController = require('../controllers/playsController');
 
 // Converts possible HOME_AWAY_DATE to id 
 router.param('gameId', function(req,res,next,id){
@@ -36,9 +35,8 @@ router.post('/', controller.createGame);
 router.get('/:gameId', controller.getSingleGame);
 router.post('/:gameId', controller.updateGame);
 
-
-router.get('/:gameId/plays', playsController.getPlaysByGame);
-router.post('/:gameId/plays', playsController.addPlaysToGame);
-router.get('/:gameId/plays/:playNb', playsController.getPlayByPlayNumber);
+router.get('/:gameId/plays', controller.getPlaysByGame);
+router.post('/:gameId/plays', controller.addPlaysToGame);
+router.get('/:gameId/plays/:playNb', controller.getPlayByPlayNumber);
 
 module.exports = router;
