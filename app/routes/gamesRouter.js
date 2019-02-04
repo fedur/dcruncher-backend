@@ -23,7 +23,6 @@ router.param('gameId', function(req,res,next,id){
 	}
 
 	else {
-		console.log('c');
 		req.gameId = id;
 		return next();
 	}

@@ -2,13 +2,16 @@
     "name": "node-api",
     "main": "server.js",
     "dependencies": {
+        "bcrypt": "^3.0.3",
         "body-parser": "latest",
+        "errorhandler": "^1.5.0",
         "express": "latest",
+        "jsonwebtoken": "^8.4.0",
         "mongodb": "^3.1.11",
         "mongoose": "latest",
         "nodemon": "^1.18.9"
     },
     "scripts": {
-    	"start": "./node_modules/nodemon/bin/nodemon.js app/server.js"
+        "start": "./node_modules/nodemon/bin/nodemon.js app/server.js"
     }
 }
