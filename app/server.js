@@ -4,25 +4,26 @@
 // =============================================================================
 
 // call the packages we need
-var express    = require('express');        // call express
-var app        = express();                 // define our app using express
+var express = require('express');        // call express
+var app = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
+var morgan = require('morgan');
 var ErrorHandler = require('./util/ErrorMiddleWare');
-const errorHandler = require('errorhandler');
-
 
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(errorHandler());
 const url = 'mongodb://datacruncher:bobthelifter001@ds159204.mlab.com:59204/games';
+mongoose.set('debug', true);
 
 // Consider setting useCreateIndex to False for production...
-mongoose.connect(url, {useNewUrlParser: true})
+mongoose.connect(url, {useNewUrlParser: true, autoIndex: true})
 	.then(res => console.log("Connected successfully to DB"))
 	.catch(err => console.log(err));
 
+// HTTP LOGGER
+app.use(morgan('dev'));
 
 // ROUTES FOR OUR API
 // =============================================================================

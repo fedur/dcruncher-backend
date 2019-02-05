@@ -5,10 +5,10 @@ const bcrypt = require('bcrypt');
 const { SALT_ROUNDS } = require('../config/APP_CONFIG');
 
 router.post('/register', function(req, res, next){
-	const { body: {name, password } } = req;
+	const { body: {username, password } } = req;
 
-	if(!name) {
-		return next(new Error('name is required'));
+	if(!username) {
+		return next(new Error('username is required'));
 	}
 
 	if(!password) {
@@ -29,17 +29,17 @@ router.post('/register', function(req, res, next){
 });
 
 router.post('/login', function(req, res, next){
-	const { body: {name, password } } = req;
+	const { body: {username, password } } = req;
 
-	if(!name) {
-		return next(new Error('name is required'));
+	if(!username) {
+		return next(new Error('username is required'));
 	}
 
 	if(!password) {
 		return next(new Error('password is required.'));
 	}
 
-	User.findOne({name: name}, function(err,user){
+	User.findOne({username: username}, function(err,user){
 		if (err)
 			next(err);
 
@@ -48,10 +48,10 @@ router.post('/login', function(req, res, next){
 				return ǹext(err);
 
 			if (isCorrect){
-				return res.send('wahoooo!');
+				return res.json(user);
 			}
 			else {
-				return res.send('Boouuuuuh');
+				return next(new Error('Credentials did not match'));
 			}
 
 		});

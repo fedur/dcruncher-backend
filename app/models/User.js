@@ -1,28 +1,36 @@
 var mongoose = require('mongoose');
 const { Schema } = mongoose;
 const bcrypt = require('bcrypt');
-const SALT_ROUNDS = 10;
+const jwt = require('jsonwebtoken');
+const { secret } = require('../config/APP_CONFIG');
 
-const UsersSchema = new Schema({
-	name: String,
-	password: String
+const UserSchema = new Schema({
+	username: {
+		type: String,
+		required: true,
+		index: {unique: true}
+	},
+	password: {
+		type: String,
+		required: true
+	}
 });
 
-UsersSchema.methods.setPassword = async function(password) {
-	bcrypt.hash(password, SALT_ROUNDS, function(err, hash) {
-		if (err)
-			return ǹext(err);
-		console.log(hash);
-	  	return hash;
-	});
+UserSchema.methods.generateJWT = function() {
+	console.log('A');
+}
+
+UserSchema.methods.toAuthJSON = function() {
+	return {
+		success: true,
+		user: {
+			_id: this._id,
+			username: this.username,
+			token: this.generateJWT(),
+		}
+	};
 };
 
-UsersSchema.methods.validatePassword = function(password) {
-	bcrypt.compare(plainTextPass, this.password, function(err, res) {
-		if (err)
-			return next(err);
-		return res;
-	});
-};
+UserSchema.index({username: 1}, {unique:true});
 
-module.exports = mongoose.model('User', UsersSchema);
+module.exports = mongoose.model('User', UserSchema);
