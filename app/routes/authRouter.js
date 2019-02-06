@@ -23,7 +23,7 @@ router.post('/register', function(req, res, next){
 		user.password = hash;
 
 		user.save()
-			.then(user => res.json(user))
+			.then(user => res.json(user.toAuthJSON()))
 			.catch(next);
 	});
 });
@@ -48,7 +48,7 @@ router.post('/login', function(req, res, next){
 				return ǹext(err);
 
 			if (isCorrect){
-				return res.json(user);
+				return res.json(user.toAuthJSON());
 			}
 			else {
 				return next(new Error('Credentials did not match'));

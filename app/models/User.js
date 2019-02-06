@@ -17,7 +17,7 @@ const UserSchema = new Schema({
 });
 
 UserSchema.methods.generateJWT = function() {
-	console.log('A');
+	return jwt.sign(this.username, secret);
 }
 
 UserSchema.methods.toAuthJSON = function() {
